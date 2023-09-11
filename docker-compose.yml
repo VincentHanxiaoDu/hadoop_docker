@@ -1,0 +1,32 @@
+version: "3.4"
+
+networks:
+  hadoop:
+    driver: bridge
+
+services:
+  hadoop_base:
+    build:
+      context: ./hadoop_base
+    # env_file:
+    #   - ./hadoop_base/.env
+
+  datanode:
+    image: hadoop_base
+    networks:
+      - hadoop
+    # volumes:
+      # - datanode:/hadoop/dfs/data
+    # env_file:
+    #   - ./hadoop_env.sh
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      # placement:
+      #     constraints:
+      #       - node.hostname: akswnc4.aksw.uni-leipzig.de
+      # labels:
+      #   traefik.docker.network: hbase
+      #   traefik.port: 50070
